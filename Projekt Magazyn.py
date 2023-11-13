@@ -3,6 +3,7 @@ items = [
     {"name": "Myszka", "quantity": 50, "unit": "szt.", "unit_price": 30.0},
     {"name": "Monitor", "quantity": 20, "unit": "szt.", "unit_price": 500.0},
         ]
+sold_items = []
 
 def get_items(items):
     table_format = "{:<8} {:<10} {:<7} {:<8}"
@@ -22,12 +23,15 @@ def add_items(items):
 
 def sell_items(items):
     product_name  = input("What would you like to sell? ")
-    quantity_to_sell  = int(input("Enter the quantity of the product"))
+    quantity_to_sell  = int(input("Enter the quantity of the product: "))
     for item in items:
         if item["name"] == product_name:
             current_quantity = item["quantity"]
             if quantity_to_sell  <= current_quantity:
                 current_quantity -= quantity_to_sell 
+
+                sold_items.append({"name":item['name'], "quantity":current_quantity })
+              
                 current_unit = item["unit"]
                 print(f"You have just sold {quantity_to_sell } {current_unit} and now you got {current_quantity}")
                 item['quantity'] = current_quantity
@@ -36,7 +40,19 @@ def sell_items(items):
                 print("Unfortunately you don't have enough quantity of this product")
             break
         elif item["name"] != product_name:
-            print(f"The product:{product_name} doesnt exist")
+            print("searching for your product...")
+    else:
+        print(f"Given product:{product_name}doesnt exist")
+
+def get_costs(items):
+    sum = sum(item["quantity"] * item["unit_price"] for item in items.values())
+
+def get_income(items):
+    income = sum(item["quantity"] * item["unit_price"] for item in sold_items.values())
+    
+def show_revenue(items):
+
+
 
 print("Welcome, you are using warehouse manager")
 while True:
