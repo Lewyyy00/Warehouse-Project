@@ -30,7 +30,7 @@ def sell_items(items):
             if quantity_to_sell  <= current_quantity:
                 current_quantity -= quantity_to_sell 
 
-                sold_items.append({"name":item['name'], "quantity":current_quantity })
+                sold_items.append({"name":item['name'], "quantity":quantity_to_sell, "unit_price":item['unit_price']})
               
                 current_unit = item["unit"]
                 print(f"You have just sold {quantity_to_sell } {current_unit} and now you got {current_quantity}")
@@ -44,19 +44,26 @@ def sell_items(items):
     else:
         print(f"Given product:{product_name}doesnt exist")
 
-def get_costs(items):
-    sum = sum(item["quantity"] * item["unit_price"] for item in items.values())
+def get_costs(items):     
+    costs = sum(item["quantity"] * item["unit_price"] for item in items)
+    return costs 
 
 def get_income(items):
-    income = sum(item["quantity"] * item["unit_price"] for item in sold_items.values())
+    income = sum(item["quantity"] * item["unit_price"] for item in sold_items)
+    return income 
     
 def show_revenue(items):
-
+    print(f"Costs:{get_costs(items)}")
+    print(f"Income:{get_income(items)}")
+    print("-" * 20)
+    print(f"Revenue:{get_income(items) - get_costs(items)}")
 
 
 print("Welcome, you are using warehouse manager")
 while True:
-    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\nI want:")
+    print("-" * 20)
+    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\n5.Show revenue\nI want:")
+    print("-" * 20)
     if WhatToDo == '1':
         break
     elif WhatToDo == '2':
@@ -65,8 +72,10 @@ while True:
         add_items(items)
     elif WhatToDo == '4':
         sell_items(items)
+    elif WhatToDo == '5':
+        show_revenue(items)
     else:
-        print('Sorry, you picked the wrong number. Please choose again 1, 2, 3 or 4')
+        print('Sorry, you picked the wrong number. Please choose again 1, 2, 3, 4 or 5')
         continue  
 
 
