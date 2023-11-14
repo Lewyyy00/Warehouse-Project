@@ -1,3 +1,4 @@
+import csv
 items = [
     {"name": "Laptop", "quantity": 10, "unit": "szt.", "unit_price": 1200.0},
     {"name": "Myszka", "quantity": 50, "unit": "szt.", "unit_price": 30.0},
@@ -58,11 +59,22 @@ def show_revenue(items):
     print("-" * 20)
     print(f"Revenue:{get_income(items) - get_costs(items)}")
 
+def export_items_to_csv(items):
+    with open('magazyn.csv', 'w', newline='') as csvfile:
+        fieldnames = ["name","quantity","unit","unit_price"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for item in items:
+            writer.writerow(item)
+
+def load_items_from_csv(items):
+
+
 
 print("Welcome, you are using warehouse manager")
 while True:
     print("-" * 20)
-    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\n5.Show revenue\nI want:")
+    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\n5.Show revenue\n6.Save to csv\nLoad from CSV\nI want:")
     print("-" * 20)
     if WhatToDo == '1':
         break
@@ -74,8 +86,12 @@ while True:
         sell_items(items)
     elif WhatToDo == '5':
         show_revenue(items)
+    elif WhatToDo == '6':
+        export_items_to_csv(items)
+    elif WhatToDo == '7':
+        export_items_to_csv(items)
     else:
-        print('Sorry, you picked the wrong number. Please choose again 1, 2, 3, 4 or 5')
+        print('Sorry, you picked the wrong number. Please choose again 1, 2, 3, 4, 5, 6 or 7')
         continue  
 
 
