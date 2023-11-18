@@ -68,13 +68,23 @@ def export_items_to_csv(items):
             writer.writerow(item)
 
 def load_items_from_csv(items):
-
+    list.clear(items)
+    with open('magazyn.csv', newline='') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        for row in csv_reader:
+            items.append({
+                "name": row["name"],
+                "quantity": int(row["quantity"]),
+                "unit": row["unit"],
+                "unit_price": float(row["unit_price"])
+            })
+        
 
 
 print("Welcome, you are using warehouse manager")
 while True:
     print("-" * 20)
-    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\n5.Show revenue\n6.Save to csv\nLoad from CSV\nI want:")
+    WhatToDo = input("Please choose the number based on your need:\n1.Exit\n2.Show\n3.Add item\n4.Sell item\n5.Show revenue\n6.Save to csv\n7.Load from CSV\nI want:")
     print("-" * 20)
     if WhatToDo == '1':
         break
@@ -89,7 +99,7 @@ while True:
     elif WhatToDo == '6':
         export_items_to_csv(items)
     elif WhatToDo == '7':
-        export_items_to_csv(items)
+        load_items_from_csv(items)
     else:
         print('Sorry, you picked the wrong number. Please choose again 1, 2, 3, 4, 5, 6 or 7')
         continue  
