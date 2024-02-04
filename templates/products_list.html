@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Current list of cargo</h2>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Unit price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, product in list_of_products.items() %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.unit }}</td>
+                    <td>{{ product.unit_price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
