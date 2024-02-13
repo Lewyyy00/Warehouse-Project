@@ -16,5 +16,3 @@ product_4 = Product("Lepszy Laptop", 15, "szt.", 2200.0)
 products = [product_1, product_2, product_3, product_4]
 items = {f'product_{i+1}': product for i, product in enumerate(products)}
 
-for key, product in items.items():
-    print(f"{key}: {product}")
