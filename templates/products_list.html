@@ -5,36 +5,40 @@
     <table class="table table-striped table-sm">
         <thead>
             <tr>
-                <td></td>
                 <th>Name</th>
                 <th>Quantity</th>
                 <th>Unit</th>
                 <th>Unit price</th>
-                <td></td>
-                <th></th>
+                <th>Sell</th>
             </tr>
         </thead>
         <tbody>
             {% for key, product in list_of_products.items() %}
                 <tr>
-                    <td></td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.unit }}</td>
                     <td>{{ product.unit_price }}</td>
-                    <td></td>
+                    <td>
+                        <!-- Sell button -->
+                        <form method="post" action="/">
+                            <input type="hidden" name="product_id" value="{{ key }}">
+                            <input type="number" name="sell_quantity" min="1" max="{{ product.quantity }}" placeholder="Quantity" required>
+                            <input type="submit" value="Sell">
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
-                <tr>
-                    <form method="post" action="/">
-                        <td></td>
-                        <td>{{form.name}}</td>
-                        <td>{{form.quantity}}</td>
-                        <td>{{form.unit}}</td>
-                        <td>{{form.unit_price}}</td>
-                        <td><input type="submit" value="Add product"></td>
-                    </form>
-                </tr>
+            <!-- Add new product button -->
+            <tr>
+                <form method="post" action="/">
+                    <td>{{ form.name }}</td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.unit }}</td>
+                    <td>{{ form.unit_price }}</td>
+                    <td><input type="submit" value="Add product"></td>
+                </form>
+            </tr>
         </tbody>
     </table>
 </div>

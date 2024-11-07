@@ -6,14 +6,25 @@ import csv
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sekretnykod'
 
-@app.route('/', methods = ["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
 def index():
     list_of_products = items
     form = AddNewProductForm()
+    
     if request.method == "POST":
-        new_product = Product(form.name.data,form.quantity.data,form.unit.data,form.unit_price.data)
-        items[f'product_{len(items)+1}'] = new_product
-    return render_template('products_list.html', list_of_products = list_of_products, form=form)
+        if "sell_quantity" in request.form and "product_id" in request.form:
+            product_id = request.form["product_id"]
+            sell_quantity = int(request.form["sell_quantity"])
+            
+            if product_id in items and items[product_id].quantity >= sell_quantity:
+                items[product_id].quantity -= sell_quantity
+        else:
+            
+            new_product = Product(form.name.data, form.quantity.data, form.unit.data, form.unit_price.data)
+            items[f'product_{len(items) + 1}'] = new_product
+
+    return render_template('products_list.html', list_of_products=list_of_products, form=form)
+
 
 @app.route("/export_to_csv")
 def export_to_csv():
@@ -43,3 +54,6 @@ def import_from_csv():
 @app.route('/sell/<product_name>', methods=["GET", "POST"])
 def sell_product():
     pass
+
+if __name__ == '__main__':
+    app.run(debug=True)
