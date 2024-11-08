@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, Response, redirect, url_for
-from magazyn import items, Product
-from forms import AddNewProductForm
+from src.forms import *
+from src.magazyn import *
 import csv
 
 app = Flask(__name__)
