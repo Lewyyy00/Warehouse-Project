@@ -12,19 +12,18 @@ def index():
     form = AddNewProductForm()
     
     if request.method == "POST":
-        if "sell_quantity" in request.form and "product_id" in request.form:
+        if "changed_quantity" in request.form and "product_id" in request.form:
             product_id = request.form["product_id"]
-            sell_quantity = int(request.form["sell_quantity"])
+            changed_quantity = int(request.form["changed_quantity"])
             
-            if product_id in items and items[product_id].quantity >= sell_quantity:
-                items[product_id].quantity -= sell_quantity
+            if product_id in items and items[product_id].quantity >= changed_quantity:
+                items[product_id].quantity += changed_quantity
         else:
             
             new_product = Product(form.name.data, form.quantity.data, form.unit.data, form.unit_price.data)
             items[f'product_{len(items) + 1}'] = new_product
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
-
 
 @app.route("/export_to_csv")
 def export_to_csv():

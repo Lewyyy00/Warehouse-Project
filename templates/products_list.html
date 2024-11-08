@@ -23,8 +23,8 @@
                         <!-- Sell button -->
                         <form method="post" action="/">
                             <input type="hidden" name="product_id" value="{{ key }}">
-                            <input type="number" name="sell_quantity" min="1" max="{{ product.quantity }}" placeholder="Quantity" required>
-                            <input type="submit" value="Sell">
+                            <input type="number" name="changed_quantity" max="{{ product.quantity }}" placeholder="Quantity" required>
+                            <input type="submit" value="Add/Sell">
                         </form>
                     </td>
                 </tr>
