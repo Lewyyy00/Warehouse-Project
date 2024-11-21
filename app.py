@@ -1,10 +1,44 @@
-from flask import Flask, render_template, request, Response, redirect, url_for
+from flask import Flask, render_template, request, Response, redirect, url_for, flash
+from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, UserMixin
 from src.forms import *
 from src.magazyn import *
 import csv
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sekretnykod'
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin):
+    def __init__(self, id, username, password_hash, role='user'):
+        self.id = id
+        self.username = username
+        self.password_hash = password_hash
+        self.role = role
+
+users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = users.get(user_id)
+    return user
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        print(users.values)
+        user = next((u for u in users.values() if u.username == username), None)
+        print(user)
+        if user and bcrypt.check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for('index'))
+        flash('Invalid username or password')
+    return render_template('login.html')
 
 @app.route('/', methods=["GET", "POST"])
 def index():
