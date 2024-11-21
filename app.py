@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, Response, redirect, url_for, flash
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user, UserMixin
+from flask_login import LoginManager, login_user
 from src.forms import *
 from src.magazyn import *
 import csv
@@ -11,15 +11,8 @@ app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
-class User(UserMixin):
-    def __init__(self, id, username, password_hash, role='user'):
-        self.id = id
-        self.username = username
-        self.password_hash = password_hash
-        self.role = role
-
 users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
+
 
 @login_manager.user_loader
 def load_user(user_id):
