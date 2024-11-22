@@ -19,7 +19,7 @@ def load_user(user_id):
     user = users.get(user_id)
     return user
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -33,7 +33,7 @@ def login():
         flash('Invalid username or password')
     return render_template('login.html')
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/main', methods=["GET", "POST"])
 def index():
     list_of_products = items
     form = AddNewProductForm()
