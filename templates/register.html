@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-Login
-{% endblock title %}
+Register
+{% endblock Register %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
-    <form method="post" class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+    <form method="post" class="form-registerin">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" required>
@@ -16,14 +16,7 @@ Login
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required>
         </div>
-        <td>
-        <button type="submit" class="btn btn-primary">Login</button>
-        </td>
-        <td>
-        <form method="post" class="form-register"></form>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>  
-        </td>
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </div>
 {% endblock content %}
