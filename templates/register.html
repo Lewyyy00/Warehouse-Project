@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}
+{% block register %}
 Register
-{% endblock Register %}
+{% endblock register %}
 
 {% block content %}
 <div class="container mt-5">
@@ -15,6 +15,10 @@ Register
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required>
+        </div>
+        <div class="form-group">
+            <label for="password_2">Repeat password:</label>
+            <input type="password" id="password_2" name="password_2" class="form-control" placeholder="Enter password" required>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>

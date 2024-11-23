@@ -24,14 +24,32 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(users.values)
         user = next((u for u in users.values() if u.username == username), None)
-        print(user)
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for('index'))
-        flash('Invalid username or password')
+        else:
+            flash('Invalid username or password')
     return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        password_2 = request.form['password_2']
+
+        if password == password_2:
+            password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+            user_id = len(users) + 1
+            users[user_id] = User(id=user_id, username=username, password_hash=password_hash)
+            flash('User registered successfully!')
+            return redirect(url_for('login'))
+        
+        else:
+            flash('passwords are not the same')
+
+    return render_template('register.html')
 
 @app.route('/main', methods=["GET", "POST"])
 def index():
