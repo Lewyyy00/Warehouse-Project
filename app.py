@@ -6,13 +6,19 @@ from src.forms import *
 from src.magazyn import *
 import csv
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -45,13 +51,12 @@ def register():
             users[user_id] = User(id=user_id, username=username, password_hash=password_hash)
             flash('User registered successfully!')
             return redirect(url_for('login'))
-        
         else:
             flash('passwords are not the same')
 
     return render_template('register.html')
 
-@app.route('/main', methods=["GET", "POST"])
+@app.route('/dashboard', methods=["GET", "POST"])
 def index():
     list_of_products = items
     form = AddNewProductForm()
