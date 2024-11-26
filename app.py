@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user
 from src.forms import *
 from src.magazyn import *
 import csv
+import sqlite3
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -15,8 +16,12 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///magazyn.db' 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+con = sqlite3.connect("magazyn.db")
 
 users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
 
