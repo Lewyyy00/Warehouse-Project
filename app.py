@@ -6,41 +6,46 @@ from src.forms import *
 from src.magazyn import *
 import csv
 import sqlite3
+from models import *
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///magazyn.db' 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
 app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///magazyn.db' 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 con = sqlite3.connect("magazyn.db")
 
-users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = users.get(user_id)
-    return user
+    return User.query.get(int(user_id))
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = next((u for u in users.values() if u.username == username), None)
+
+
+        user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for('index'))
         else:
-            flash('Invalid username or password')
+            flash('Invalid username or password.')
+            return redirect(url_for('login'))
+
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -52,10 +57,13 @@ def register():
 
         if password == password_2:
             password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-            user_id = len(users) + 1
-            users[user_id] = User(id=user_id, username=username, password_hash=password_hash)
+            new_user = User(username=username, password_hash=password_hash)
+            db.session.add(new_user)
+            db.session.commit()
+
             flash('User registered successfully!')
             return redirect(url_for('login'))
+
         else:
             flash('passwords are not the same')
 
