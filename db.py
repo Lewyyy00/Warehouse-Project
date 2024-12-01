@@ -1,9 +1,13 @@
-from app import app,db
-from models import User
+from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
-with app.app_context():
-    db.create_all()
-    user = User(username='admin')
-    user.set_password('admin123')
-    db.session.add(user)
-    db.session.commit()
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
