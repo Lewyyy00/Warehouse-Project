@@ -5,8 +5,18 @@ from flask_login import LoginManager, login_user
 from src.forms import *
 from src.magazyn import *
 import csv
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+
+
 app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
