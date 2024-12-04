@@ -14,6 +14,8 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+from models import User
+
 app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
