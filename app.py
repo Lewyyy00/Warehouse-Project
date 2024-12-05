@@ -14,7 +14,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import User
+from models import User, add_new_user
 
 app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
@@ -24,8 +24,7 @@ users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_ha
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = users.get(user_id)
-    return user
+    return User.query.get(int(user_id))
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
