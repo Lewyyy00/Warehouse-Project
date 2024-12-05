@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, Response, redirect, url_for, flash
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, UserMixin, login_user, login_required
 from src.forms import *
 from src.magazyn import *
 import csv
@@ -16,11 +16,9 @@ migrate = Migrate(app, db)
 
 from models import User, add_new_user
 
-app.config['SECRET_KEY'] = 'sekretnykod'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-users = {1: User(id=1, username='xyz', password_hash=bcrypt.generate_password_hash('xyz').decode('utf-8'))}
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -31,34 +29,51 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = next((u for u in users.values() if u.username == username), None)
+        user = User.query.filter_by(username=username).first()
+
+        if user:
+            print(f"Stored hash: {user.password_hash}")
+            print(f"Entered password: {password}")
+            print(f"Password match: {bcrypt.check_password_hash(user.password_hash, password)}")
+
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
+            flash('You have been logged in')
             return redirect(url_for('index'))
+        
         else:
             flash('Invalid username or password')
+
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
+    if request.method == 'POST':    
         username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
         password_2 = request.form['password_2']
 
         if password == password_2:
-            password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-            user_id = len(users) + 1
-            users[user_id] = User(id=user_id, username=username, password_hash=password_hash)
-            flash('User registered successfully!')
-            return redirect(url_for('login'))
+            existing_user = User.query.filter_by(username=username).first() #check if user with this username exists 
+            if existing_user:
+                flash('Username already taken. Please choose another one.')
+                return redirect(url_for('register'))
+            else:
         
+                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                add_new_user(username, email, hashed_password)
+                flash('Registration successful. You can now log in.')
+                return redirect(url_for('login'))
+                
         else:
             flash('passwords are not the same')
+            return redirect(url_for('register'))
 
     return render_template('register.html')
 
 @app.route('/main', methods=["GET", "POST"])
+@login_required
 def index():
     list_of_products = items
     form = AddNewProductForm()
