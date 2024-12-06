@@ -9,10 +9,3 @@ class AddNewProductForm(FlaskForm):
     unit = StringField('unit', validators=[DataRequired()])
     unit_price = StringField('unit_price', validators=[DataRequired()])
 
-class User(UserMixin):
-    def __init__(self, id, username, password_hash, role='user'):
-        self.id = id
-        self.username = username
-        self.password_hash = password_hash
-        self.role = role
-
