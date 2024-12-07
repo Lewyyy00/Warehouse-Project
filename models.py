@@ -17,11 +17,11 @@ class Data(db.Model):
     __tablename__ = "data"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(200), index=True, unique=True)
     quantity = db.Column(db.Integer, nullable=False)
-    unit = db.Column(db.Integer, nullable=False)
-    unit_price = db.Column(db.Integer, nullable=False)
+    unit = db.Column(db.String, nullable=False)
+    unit_price = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
         return f"<Post {self.title}>"
