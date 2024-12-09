@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 magazyn.csv
 projekt_magazyn.py
+todolist.py

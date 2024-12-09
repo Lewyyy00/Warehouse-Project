@@ -14,7 +14,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import User, add_new_user
+from models import User, add_new_user, remove_user
 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -120,6 +120,13 @@ def import_from_csv():
 @app.route('/sell/<product_name>', methods=["GET", "POST"])
 def sell_product():
     pass
+
+
+@app.route ("/admin", methods=["GET", "POST"])
+def admin():
+    
+
+            
 
 if __name__ == '__main__':
     app.run(debug=True)

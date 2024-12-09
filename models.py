@@ -1,6 +1,5 @@
 from app import *
 
-
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     
@@ -41,6 +40,7 @@ class Category(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     products = db.relationship('Product', backref='category', lazy=True)
 
+
 def add_new_user(user, email, passoword):
     
     new_user = User(
@@ -56,6 +56,22 @@ def add_new_user(user, email, passoword):
     try:
         db.session.commit()
         print(f"USER: {new_user.username} was added!")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"ERROR: {e}")
+
+    finally:
+        db.session.close()  
+
+def remove_user(user_id):
+
+    user = User.query.get(user_id)
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        print(f"USER: {user_id} was deleted!")
 
     except Exception as e:
         db.session.rollback()
