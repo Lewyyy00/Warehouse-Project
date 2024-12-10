@@ -79,3 +79,28 @@ def remove_user(user_id):
 
     finally:
         db.session.close()  
+
+
+def add_new_product(name, description, unit, unit_price):
+
+    new_product = Product(
+        
+        name=f"{name}",
+        description=f"{description}",
+        unit=f"{unit}",
+        unit_price=f"{unit_price}"
+
+        )
+    
+    db.session.add(new_product)
+
+    try:
+        db.session.commit()
+        print(f"USER: {new_product.name} was added!")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"ERROR: {e}")
+
+    finally:
+        db.session.close()  

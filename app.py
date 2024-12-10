@@ -124,7 +124,7 @@ def sell_product():
 
 @app.route ("/admin", methods=["GET", "POST"])
 def admin():
-    
+    pass
 
             
 
