@@ -43,7 +43,6 @@ class Category(db.Model):
 
 class DatabaseOperations:
 
-
     def add_new_user(user, email, passoword):
         
         new_user = User(
@@ -110,9 +109,63 @@ def add_record(model, **kwargs):
     finally:
         db.session.close()  
 
+def add_data(cat_name, prod_name, prod_desc, prod_unit, prod_unit_price, quantity, userid):
+    try:
+        
+        with db.session.begin():
+            category = add_record(
+                Category, 
+                name=cat_name
+                )
+            
+            if not category:
+                raise ValueError('Error when adding category')
+            
+            product = add_record(
+                Product, 
+                name=prod_name, 
+                description=prod_desc, 
+                category_id=category.id, 
+                unit=prod_unit, 
+                unit_price=prod_unit_price
+                )
+            
+            if not product:
+                raise ValueError('Error when adding product')
+            
+            user_product = add_record(
+                UserProduct, 
+                user_id=userid, 
+                product_id=product.id, 
+                quantity=quantity
+                )
+            
+            if not user_product:
+                raise ValueError('Error when adding user_product')
+            
+            print(f"the {category}, {product}, {user_product} were added")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"ERROR: {e}")
 
 
-    """def add_new_product(name, category_id, description, unit, unit_price):
+with app.app_context():
+    
+    add_data(
+        cat_name="Electronics",
+        prod_name="Smartphone",
+        prod_desc="Latest model with AI features",
+        prod_unit="pcs",
+        prod_unit_price=799.99,
+        quantity=10,
+        userid=1
+        )
+
+
+
+
+"""def add_new_product(name, category_id, description, unit, unit_price):
 
         new_product = Product(
             
