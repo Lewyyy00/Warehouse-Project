@@ -95,9 +95,15 @@ def add_record(model, **kwargs):
         record or none if error.
     """
     try:
+
+        existing_record = model.query.filter_by(**kwargs).first()
+        if existing_record:
+            print(f"Record already exists in {model.__tablename__}: {existing_record}")
+            return existing_record
+
         record = model(**kwargs)
         db.session.add(record)
-        db.session.commit()
+        db.session.flush()
         print(f"record was added in {model.__tablename__}: {record}")
         return record
 
@@ -105,9 +111,6 @@ def add_record(model, **kwargs):
         db.session.rollback()
         print(f"ERROR: {e}")
         return None
-
-    finally:
-        db.session.close()  
 
 def add_data(cat_name, prod_name, prod_desc, prod_unit, prod_unit_price, quantity, userid):
     try:
@@ -154,15 +157,13 @@ with app.app_context():
     
     add_data(
         cat_name="Electronics",
-        prod_name="Smartphone",
+        prod_name="Laptop",
         prod_desc="Latest model with AI features",
         prod_unit="pcs",
-        prod_unit_price=799.99,
-        quantity=10,
+        prod_unit_price=1799.99,
+        quantity=100,
         userid=1
         )
-
-
 
 
 """def add_new_product(name, category_id, description, unit, unit_price):
