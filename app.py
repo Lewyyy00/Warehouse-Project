@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, Response, redirect, url_for, flash
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from flask_login import LoginManager, login_user, login_required
 from src.forms import *
 from src.magazyn import *
 import csv
@@ -11,10 +11,13 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
+
+from db_instance import db 
+db.init_app(app)  
 migrate = Migrate(app, db)
 
-from models import User, add_new_user, remove_user
+from operations import DatabaseOperations
+from models import User, UserProduct, Product, Category
 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -62,7 +65,7 @@ def register():
             else:
         
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                add_new_user(username, email, hashed_password)
+                DatabaseOperations.add_new_user(username, email, hashed_password)
                 flash('Registration successful. You can now log in.')
                 return redirect(url_for('login'))
                 

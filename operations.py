@@ -1,4 +1,5 @@
-from models import *
+from models import User, Product, Category, UserProduct
+from db_instance import db
 
 class DatabaseOperations:
 
@@ -112,7 +113,7 @@ def add_data(cat_name, prod_name, prod_desc, prod_unit, prod_unit_price, quantit
         print(f"ERROR: {e}")
 
 
-with app.app_context():
+"""with app.app_context():
     
     add_data(
         cat_name="Electronics",
@@ -123,3 +124,4 @@ with app.app_context():
         quantity=100,
         userid=1
         )
+"""
