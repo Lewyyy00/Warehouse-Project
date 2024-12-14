@@ -78,20 +78,26 @@ def register():
 @app.route('/main', methods=["GET", "POST"])
 @login_required
 def index():
-    list_of_products = items
+    list_of_products = Product.query.all()
     form = AddNewProductForm()
     
     if request.method == "POST":
+
         if "changed_quantity" in request.form and "product_id" in request.form:
-            product_id = request.form["product_id"]
+            product_id = int(request.form["product_id"])
             changed_quantity = int(request.form["changed_quantity"])
             
-            if product_id in items and items[product_id].quantity >= changed_quantity:
-                items[product_id].quantity += changed_quantity
+            product = Product.query.get(product_id)
+            if product and product.quantity + changed_quantity >= 0:
+                product.quantity += changed_quantity
+                db.session.commit()
+                flash("Quantity updated successfully!", "success")
+            else:
+                flash("Error: Insufficient stock or invalid product.", "danger")
         else:
-            
-            new_product = Product(form.name.data, form.quantity.data, form.unit.data, form.unit_price.data)
-            items[f'product_{len(items) + 1}'] = new_product
+            pass
+            #new_product = Product(form.name.data, form.quantity.data, form.unit.data, form.unit_price.data)
+            #items[f'product_{len(items) + 1}'] = new_product
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
 
