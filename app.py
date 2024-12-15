@@ -95,9 +95,19 @@ def index():
             else:
                 flash("Error: Insufficient stock or invalid product.", "danger")
         else:
-            pass
-            #new_product = Product(form.name.data, form.quantity.data, form.unit.data, form.unit_price.data)
-            #items[f'product_{len(items) + 1}'] = new_product
+            if form.validate_on_submit():
+                new_product = Product(
+                    name=form.name.data,
+                    description=form.description.data,
+                    unit=form.unit.data,
+                    unit_price=form.unit_price.data,
+                    quantity=form.quantity.data
+                )
+                db.session.add(new_product)
+                db.session.commit()
+                flash("New product added successfully!", "success")
+            else:
+                flash("Error: Invalid form submission.", "danger")
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
 

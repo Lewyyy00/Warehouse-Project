@@ -6,6 +6,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Description</th>
                 <th>Quantity</th>
                 <th>Unit</th>
                 <th>Unit price</th>
@@ -13,9 +14,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for key, product in list_of_products.items() %}
+            {% for product in list_of_products %}
                 <tr>
                     <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.unit }}</td>
                     <td>{{ product.unit_price }}</td>
@@ -33,6 +35,7 @@
             <tr>
                 <form method="post" action="/">
                     <td>{{ form.name }}</td>
+                    <td>{{ form.description }}</td>
                     <td>{{ form.quantity }}</td>
                     <td>{{ form.unit }}</td>
                     <td>{{ form.unit_price }}</td>
