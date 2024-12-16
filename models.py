@@ -17,7 +17,6 @@ class UserProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
     user = db.relationship('User', back_populates='products')
     product = db.relationship('Product', back_populates='user_products')
 
@@ -31,6 +30,7 @@ class Product(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True)
     unit = db.Column(db.String(50), nullable=False)
     unit_price = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     user_products = db.relationship('UserProduct', back_populates='product', lazy=True)
 
 class Category(db.Model):
