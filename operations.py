@@ -41,6 +41,22 @@ class DatabaseOperations:
 
         finally:
             db.session.close()  
+
+    def remove_product(id):
+
+        product = Product.query.get(id)
+
+        try:
+            db.session.delete(product)
+            db.session.commit()
+            print(f"USER: {product} was deleted!")
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"ERROR: {e}")
+
+        finally:
+            db.session.close()  
             
 def add_record(model, **kwargs):
 

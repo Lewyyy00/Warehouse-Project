@@ -8,3 +8,4 @@ class Config:
     'sqlite:///' + os.path.join(BASE_DIR, 'warehouse.db')
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False 
+    SQLALCHEMY_ECHO = True

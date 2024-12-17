@@ -111,6 +111,10 @@ def index():
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
 
+@app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
+def delete_product(product_id):
+    DatabaseOperations.add_new_user(product_id)
+
 @app.route("/export_to_csv")
 def export_to_csv():
     with open('magazyn.csv', 'w', newline='') as csvfile:
@@ -145,7 +149,6 @@ def sell_product():
 def admin():
     pass
 
-            
 
 if __name__ == '__main__':
     app.run(debug=True)
