@@ -19,6 +19,9 @@ migrate = Migrate(app, db)
 from operations import DatabaseOperations
 from models import User, UserProduct, Product, Category
 
+"""with app.app_context():
+    DatabaseOperations.remove_product(1)"""
+
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -113,7 +116,7 @@ def index():
 
 @app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
 def delete_product(product_id):
-    DatabaseOperations.add_new_user(product_id)
+    DatabaseOperations.remove_product(product_id)
 
 @app.route("/export_to_csv")
 def export_to_csv():
@@ -152,3 +155,4 @@ def admin():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

@@ -46,17 +46,22 @@ class DatabaseOperations:
 
         product = Product.query.get(id)
 
-        try:
-            db.session.delete(product)
-            db.session.commit()
-            print(f"USER: {product} was deleted!")
+        if product:
+    
+            try:
+                UserProduct.query.filter_by(product_id=id).delete()
+                db.session.commit()
 
-        except Exception as e:
-            db.session.rollback()
-            print(f"ERROR: {e}")
+                db.session.delete(product)
+                db.session.commit()
+                print(f"USER: {product} was deleted!")
 
-        finally:
-            db.session.close()  
+            except Exception as e:
+                db.session.rollback()
+                print(f"ERROR: {e}")
+
+            finally:
+                db.session.close()  
             
 def add_record(model, **kwargs):
 
