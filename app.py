@@ -16,11 +16,11 @@ from db_instance import db
 db.init_app(app)  
 migrate = Migrate(app, db)
 
-from operations import DatabaseOperations
+from operations import DatabaseOperations, add_data
 from models import User, UserProduct, Product, Category
 
-"""with app.app_context():
-    DatabaseOperations.remove_product(1)"""
+with app.app_context():
+    add_data()
 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -114,9 +114,13 @@ def index():
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
 
-@app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
+@app.route('/delete_product/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
     DatabaseOperations.remove_product(product_id)
+
+@app.route('/add_product/<int:product_id>', methods=['POST'])
+def delete_product(product_id):
+    DatabaseOperations.add_data(product_id)
 
 @app.route("/export_to_csv")
 def export_to_csv():
