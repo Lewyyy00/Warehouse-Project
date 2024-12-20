@@ -16,11 +16,8 @@ from db_instance import db
 db.init_app(app)  
 migrate = Migrate(app, db)
 
-from operations import DatabaseOperations, add_data
+from operations import DatabaseOperations
 from models import User, UserProduct, Product, Category
-
-with app.app_context():
-    add_data()
 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -114,13 +111,36 @@ def index():
 
     return render_template('products_list.html', list_of_products=list_of_products, form=form)
 
-@app.route('/delete_product/<int:product_id>', methods=['DELETE'])
+"""@app.route('/delete_product/<int:product_id>', methods=['POST'])
+@login_required
 def delete_product(product_id):
-    DatabaseOperations.remove_product(product_id)
+    product = Product.query.get(product_id)
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        flash('Product deleted successfully!', 'success')
+    else:
+        flash('Product not found.', 'danger')
+    return redirect(url_for('index'))
 
-@app.route('/add_product/<int:product_id>', methods=['POST'])
-def delete_product(product_id):
-    DatabaseOperations.add_data(product_id)
+@app.route('/add_product', methods=['POST'])
+@login_required
+def add_product():
+    form = AddNewProductForm()
+    if form.validate_on_submit():
+        new_product = Product(
+            name=form.name.data,
+            description=form.description.data,
+            unit=form.unit.data,
+            unit_price=form.unit_price.data,
+            quantity=form.quantity.data
+        )
+        db.session.add(new_product)
+        db.session.commit()
+        flash('New product added successfully!', 'success')
+    else:
+        flash('Error: Invalid form submission.', 'danger')
+    return redirect(url_for('index'))"""
 
 @app.route("/export_to_csv")
 def export_to_csv():
